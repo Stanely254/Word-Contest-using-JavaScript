@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Word Contest</title>
-  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body class="bg-dark text-white">
   <header class="bg-secondary text-center p-3 mb-3">
@@ -50,6 +51,104 @@
     </div>
   </div>
 
-  <script src="js/app.js"></script>
+  <script>
+    window.addEventListener('load', init);
+//Globals
+
+//Available levels
+const levels = {
+  easy: 5,
+  mediaum: 2,
+  hard: 2
+}
+//To change level
+const currentLevel = levels.hard;
+
+let time = currentLevel,
+    score = 0, 
+    isPlaying;
+
+//DOM Elements
+const wordInput = document.querySelector('#word-input');
+const currentWord = document.querySelector('#current-word');
+const scoreDisplay = document.querySelector('#score');
+const timeDisplay = document.querySelector('#time');
+const message = document.querySelector('#message');
+const seconds = document.querySelector('#seconds');
+
+const words = ['words', 'stan', 'books', 'physics'];
+
+//Initialize game
+function init(){
+  //show number of seconds in UI
+  seconds.innerHTML  = currentLevel;
+  //Load word from array
+  showWord(words);
+  //start matching on word input
+  wordInput.addEventListener('input', startMatch);
+  //call countdown every second
+  setInterval(countDown, 1000);
+  //check the game status
+  setInterval(checkStatus, 50);
+}
+
+//start match
+function startMatch(){
+  if(matchWords()){
+    isPlaying = true;
+    time = currentLevel + 1;
+    showWord(words);
+    wordInput.value = '';
+    score++;
+  }  
+
+  //If score is -1 display 0
+  if(score === -1){
+    scoreDisplay.innerHTML = 0;
+  } else {
+  scoreDisplay.innerHTML = score;
+  }
+}
+
+//Match the current word to word input
+function matchWords(){
+  if (wordInput.value === currentWord.innerHTML) {
+    message.innerHTML = 'Correct!!!';
+    return true;
+  } else {
+    message.innerHTML = '';
+    return false;
+  }
+}
+
+//Pick and show random word
+function showWord(words){
+  //
+  const randIndex = Math.floor(Math.random() * words.length);
+  currentWord.innerHTML = words[randIndex];
+}
+
+//COunt Down
+function countDown(){
+  //Make sure time is not run out
+  if(time > 0){
+    //Decrease the time
+    time--;
+  } else if(time === 0){
+    //Game is over
+    isPlaying = false;
+  }
+  //Show time 
+  timeDisplay.innerHTML = time;
+}
+
+//check game status
+function checkStatus(){
+  if(!isPlaying && time === 0){
+    message.innerHTML = 'Game Over!!!';
+    score = -1;
+  }
+}
+  </script>
 </body>
 </html>
