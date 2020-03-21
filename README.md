@@ -1,2 +1,2 @@
 # Word-Contest-using-JavaScript
-An app that gives facts 
+a game typing word contest 
